@@ -92,7 +92,7 @@ dependencies {
     testImplementation "io.mockk:mockk:${versions.mockk}"
     debugImplementation "androidx.fragment:fragment-testing:${versions.fragment_ktx}"*/
 
-    testImplementation "junit:junit:${versions.mockk}"
+    testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
     androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_junit_ktx}"
     testImplementation "io.mockk:mockk:${versions.mockk}"

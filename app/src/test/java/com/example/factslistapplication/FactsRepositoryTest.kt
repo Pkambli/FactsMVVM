@@ -36,7 +36,9 @@ class FactsRepositoryTest {
     @Test
     fun fetchFacts_failure_should_handle_failure() = runBlocking {
         mockkObject(API)
-        coEvery { apiService.getFacts() } returns Response.error(400, errorResponseBody)
+        coEvery { apiService.getFacts() } returns Response.error(400,
+            errorResponseBody
+        )
         every { API.service } returns apiService
         val result = SUT.fetchFacts()
         assertTrue(result is Result.Error)
