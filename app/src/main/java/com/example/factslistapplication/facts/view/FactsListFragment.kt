@@ -1,12 +1,12 @@
 package com.example.factslistapplication.facts.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.factslistapplication.R
 import com.example.factslistapplication.common.BaseFragment
+import com.example.factslistapplication.common.UIState
 import com.example.factslistapplication.facts.model.Row
 import com.example.factslistapplication.facts.viewModel.FactsViewModel
 import com.example.factslistapplication.facts.viewModel.FactsViewModelFactory
@@ -32,17 +32,18 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
                 isRefreshing = false
             }
         }
-        factsViewModel.factsLiveData.observe(viewLifecycleOwner, {
-            factsAdapter.setItems(it)
-        })
-        factsViewModel.errorLiveData.observe(viewLifecycleOwner, {
-            showError(it.exception.message)
-        })
-        factsViewModel.progressLiveData.observe(viewLifecycleOwner, {
-            if (it) {
-                indeterminateBar.visibility = View.VISIBLE
-            } else {
-                indeterminateBar.visibility = View.GONE
+
+        factsViewModel.factsState.observe(viewLifecycleOwner, {
+            when (it) {
+                is UIState.Error -> showError(it.error.exception.message)
+                is UIState.Success -> factsAdapter.setItems(it.data)
+                is UIState.Loading -> {
+                    if (it.isLoading && !swipeToRefreshList.isRefreshing) {
+                        indeterminateBar.visibility = View.VISIBLE
+                    } else {
+                        indeterminateBar.visibility = View.GONE
+                    }
+                }
             }
         })
     }
@@ -55,7 +56,6 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
     }
 
     override fun onItemClick(row: Row) {
-        Log.e("OnClick", "Click Pressed=====")
         val activity = requireActivity()
         if (activity is OnItemClickListener) {
             activity.onItemClick(row)

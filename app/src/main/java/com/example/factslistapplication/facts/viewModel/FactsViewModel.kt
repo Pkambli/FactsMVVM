@@ -1,6 +1,7 @@
 package com.example.factslistapplication.facts.viewModel
 
 import androidx.lifecycle.*
+import com.example.factslistapplication.common.UIState
 import com.example.factslistapplication.facts.model.Row
 import com.example.factslistapplication.facts.model.UiError
 import com.example.factslistapplication.facts.repository.FactsRepository
@@ -9,35 +10,31 @@ import kotlinx.coroutines.launch
 
 class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel() {
 
-    private val _factsLiveData = MutableLiveData<List<Row>>()
-    val factsLiveData: LiveData<List<Row>>
-        get() = _factsLiveData
+    private val _factsState = MutableLiveData<UIState<List<Row>>>()
+    val factsState: LiveData<UIState<List<Row>>>
+        get() = _factsState
 
-    private val _errorLiveData = MutableLiveData<UiError>()
-    val errorLiveData: LiveData<UiError>
-        get() = _errorLiveData
-
-    private val _progressLiveData = MutableLiveData<Boolean>()
-    val progressLiveData: LiveData<Boolean>
-        get() = _progressLiveData
+    private fun emitState(uiState: UIState<List<Row>>) {
+        _factsState.value = uiState
+    }
 
     fun fetchLatestData() {
-        _progressLiveData.postValue(true)
+        emitState(UIState.Loading(true))
         viewModelScope.launch {
             val result = factsRepository.fetchFacts()
             when (result) {
                 is Result.Success -> {
-                    _progressLiveData.postValue(false)
+                    emitState(UIState.Loading(false))
                     val rowItemList = result.data.rows
                     if (!rowItemList.isNullOrEmpty()) {
-                        _factsLiveData.value = rowItemList
+                        emitState(UIState.Success(rowItemList))
                     } else {
-                        _factsLiveData.value = emptyList()
+                        emitState(UIState.Success(emptyList()))
                     }
                 }
                 is Result.Error -> {
-                    _progressLiveData.postValue(false)
-                    _errorLiveData.value = UiError(result.exception)
+                    emitState(UIState.Loading(false))
+                    emitState(UIState.Error(UiError(result.exception)))
                 }
             }
         }
