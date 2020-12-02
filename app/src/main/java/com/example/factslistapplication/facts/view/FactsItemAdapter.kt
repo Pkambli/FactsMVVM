@@ -9,7 +9,7 @@ import com.example.factslistapplication.facts.model.Row
 import com.example.factslistapplication.utils.imageLoading
 import kotlinx.android.synthetic.main.items_list_facts.view.*
 
-class FactsItemAdapter :
+class FactsItemAdapter(private val itemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<FactsItemAdapter.FactsViewHolder>() {
 
     private val items = mutableListOf<Row>()
@@ -21,7 +21,7 @@ class FactsItemAdapter :
      */
     fun setItems(rowData: List<Row>?) {
         items.clear()
-        if(!rowData.isNullOrEmpty()){
+        if (!rowData.isNullOrEmpty()) {
             rowData.filter { !it.title.isNullOrBlank() }
                 .forEach { items.add(it) }
         }
@@ -34,6 +34,8 @@ class FactsItemAdapter :
                 .from(parent.context)
                 .inflate(R.layout.items_list_facts, parent, false)
         )
+
+        holder.itemView.setOnClickListener { itemClickListener.onItemClick(holder.row) }
         return holder
     }
 
@@ -50,10 +52,17 @@ class FactsItemAdapter :
      */
     class FactsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        lateinit var row: Row
+
         fun setFactsData(row: Row) {
+            this.row = row
             itemView.tvFactsTitle.text = row.title
             itemView.tvFactsDescription.text = row.description
             itemView.ivFactsImage.imageLoading(row.imageHref ?: "")
         }
     }
+}
+
+interface OnItemClickListener {
+    fun onItemClick(row: Row)
 }

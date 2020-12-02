@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FactsListApplication</string>
+    <string name="facts_list_fragment">FactsListFragment</string>
+    <string name="facts_details_fragment">FactsDetailsFragment</string>
 </resources>

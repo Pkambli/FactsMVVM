@@ -11,16 +11,16 @@ import java.io.IOException
 class FactsRepository {
 
     suspend fun fetchFacts(): Result<FactsResponse> = withContext(Dispatchers.IO) {
-            return@withContext safeApiCall({
-                val response = API.service.getFacts()
-                if (response.isSuccessful){
-                    val factsResponse = response.body()
-                    if (factsResponse != null) {
-                        return@safeApiCall Result.Success(factsResponse)
-                    }
+        return@withContext safeApiCall({
+            val response = API.service.getFacts()
+            if (response.isSuccessful) {
+                val factsResponse = response.body()
+                if (factsResponse != null) {
+                    return@safeApiCall Result.Success(factsResponse)
                 }
-                Result.Error(IOException("Access denied."))
-            }, "Something went wrong.")
-        }
+            }
+            Result.Error(IOException("Access denied."))
+        }, "Something went wrong.")
+    }
 
 }

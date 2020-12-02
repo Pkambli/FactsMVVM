@@ -64,6 +64,9 @@ dependencies {
     implementation "com.google.code.gson:gson:${versions.gson}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
 
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.nav_version}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.nav_version}"
+
     testImplementation "junit:junit:${versions.junit}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
     androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_junit_ktx}"

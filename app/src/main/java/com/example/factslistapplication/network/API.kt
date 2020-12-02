@@ -14,25 +14,25 @@ object API {
 
     private val httpInterceptor = Interceptor { chain ->
         val request = chain.request()
-                .newBuilder()
-                .header("Content-type", "application/json")
-                .header("charset", "UTF-8")
-                .build()
+            .newBuilder()
+            .header("Content-type", "application/json")
+            .header("charset", "UTF-8")
+            .build()
 
         chain.proceed(request)
     }
 
     // OkhttpClient for building http request url
     private val okHttpClient = OkHttpClient().newBuilder()
-            .addInterceptor(interceptor)
-            .addNetworkInterceptor(httpInterceptor)
-            .build()
+        .addInterceptor(interceptor)
+        .addNetworkInterceptor(httpInterceptor)
+        .build()
 
     private fun retrofit(): Retrofit = Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        .client(okHttpClient)
+        .baseUrl(BuildConfig.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
     val service: APIService = retrofit().create(APIService::class.java)
 
