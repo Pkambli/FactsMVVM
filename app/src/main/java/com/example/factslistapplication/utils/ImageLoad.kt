@@ -8,8 +8,8 @@ fun ImageView.imageLoading(url: String) {
     Glide.with(this)
         .load(url)
         .centerCrop()
-        .placeholder(R.mipmap.ic_launcher)
-        .error(R.mipmap.ic_launcher)
+        .placeholder(R.drawable.defaultimage)
+        .error(R.drawable.defaultimage)
         .into(this)
 
 }
