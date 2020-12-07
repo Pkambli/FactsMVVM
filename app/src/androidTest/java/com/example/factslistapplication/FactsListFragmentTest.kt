@@ -182,6 +182,79 @@ class FactsListFragmentTest {
         )
     }
 
+    /**
+     * Test that the item with the text at particular position exist
+     */
+    @Test(expected = PerformException::class)
+    fun itemWithText_aParticularPosition() {
+        // scrollTo will fail the test if no item matches.
+        onView(withId(R.id.factRecyclerView))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<FactsItemAdapter.FactsViewHolder>(
+                    3,
+                    ViewActions.click()
+                )
+            )
+
+        val itemElementText = "${"Hockey Night in Canada"} ${3}"
+        onView(withText(itemElementText)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Test that the item with the text does not exist in list.
+     */
+    @Test(expected = PerformException::class)
+    fun itemWithText_doesNotExist() {
+        // scrollTo will fail the test if no item matches.
+        onView(withId(R.id.factRecyclerView))
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("not in the list"))
+                )
+            )
+    }
+
+    /**
+     * Test that the list is long enough for this sample, the last item shouldn't appear.
+     */
+    @Test
+    fun lastItem_NotDisplayed() {
+        // Last item should not exist if the list wasn't scrolled down.
+        onView(withText(30)).check(doesNotExist())
+    }
+
+    fun clickChildViewWithId(id: Int): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View>? {
+                return null
+            }
+
+            override fun getDescription(): String {
+                return "Click on a child view with specified id."
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                val v = view.findViewById<View>(id)
+                v.performClick()
+            }
+        }
+    }
+
+
+    @Test(expected = PerformException::class)
+    fun test_view_on_click() {
+        onView(withId(R.id.factRecyclerView)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<FactsItemAdapter.FactsViewHolder>(
+                0,
+                ViewActions.click()
+            )
+        )
+
+        Thread.sleep(3000)
+
+        onView(withId(R.id.imageViewDetails)).check(matches(withDrawable(R.drawable.defaultimage)))
+    }
+
     class DrawableMatcher(resourceId: Int) : TypeSafeMatcher<View?>() {
         override fun matchesSafely(item: View?): Boolean {
             return false
@@ -198,7 +271,7 @@ class FactsListFragmentTest {
         return DrawableMatcher(-1)
     }
 
-    private fun withCustomConstraints(action: ViewAction, constraints: Matcher<View>): ViewAction {
+    private fun withCustomConstraints(action: ViewAction, constraints: Matcher<View>): ViewAction? {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
                 return constraints
