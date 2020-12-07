@@ -95,7 +95,7 @@ class FactsListFragmentTest {
                 matches(
                     CustomMatcher.atPosition(
                         0,
-                        ViewMatchers.hasDescendant(ViewMatchers.withText("Beavers"))
+                        hasDescendant(ViewMatchers.withText("Beavers"))
                     )
                 )
             )
@@ -106,7 +106,7 @@ class FactsListFragmentTest {
                 matches(
                     CustomMatcher.atPosition(
                         8,
-                        ViewMatchers.hasDescendant(ViewMatchers.withText("Meese"))
+                        hasDescendant(ViewMatchers.withText("Meese"))
                     )
                 )
             )
@@ -177,7 +177,7 @@ class FactsListFragmentTest {
         onView((withId(R.id.swipeToRefreshList))).perform(
             withCustomConstraints(
                 ViewActions.swipeDown(),
-                ViewMatchers.isDisplayingAtLeast(85)
+                isDisplayingAtLeast(85)
             )
         )
     }
