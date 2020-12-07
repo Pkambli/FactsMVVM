@@ -2,4 +2,7 @@
     <string name="app_name">FactsListApplication</string>
     <string name="facts_list_fragment">FactsListFragment</string>
     <string name="facts_details_fragment">FactsDetailsFragment</string>
+    <string name="no_internet">Please check your internet connection</string>
+    <string name="common_error">Something went wrong.</string>
+    <string name="access_deny">Access denied.</string>
 </resources>

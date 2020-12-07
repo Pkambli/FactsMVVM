@@ -8,6 +8,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object API {
+
+    var BASE_URL = BuildConfig.BASE_URL
+//    var BASE_URL = "http://localhost:8080/"
+
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
@@ -28,12 +32,12 @@ object API {
         .addNetworkInterceptor(httpInterceptor)
         .build()
 
-    private fun retrofit(): Retrofit = Retrofit.Builder()
+    fun retrofit(baseUrl: String): APIService = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(BuildConfig.BASE_URL)
+        .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-    val service: APIService = retrofit().create(APIService::class.java)
+        .create(APIService::class.java)
 
 }
+

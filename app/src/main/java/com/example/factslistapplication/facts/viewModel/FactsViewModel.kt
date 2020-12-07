@@ -14,16 +14,27 @@ class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel()
     val factsState: LiveData<UIState<List<Row>>>
         get() = _factsState
 
+    var isAPICalling = false
+
+    init {
+        fetchLatestData()
+    }
+
     private fun emitState(uiState: UIState<List<Row>>) {
         _factsState.value = uiState
     }
 
     fun fetchLatestData() {
+
+        if(isAPICalling) return
+
+        isAPICalling = true
         emitState(UIState.Loading(true))
         viewModelScope.launch {
             val result = factsRepository.fetchFacts()
             when (result) {
                 is Result.Success -> {
+                    isAPICalling = false
                     emitState(UIState.Loading(false))
                     val rowItemList = result.data.rows
                     if (!rowItemList.isNullOrEmpty()) {
@@ -33,6 +44,7 @@ class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel()
                     }
                 }
                 is Result.Error -> {
+                    isAPICalling = false
                     emitState(UIState.Loading(false))
                     emitState(UIState.Error(UiError(result.exception)))
                 }
@@ -41,8 +53,8 @@ class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel()
     }
 }
 
-class FactsViewModelFactory : ViewModelProvider.Factory {
+class FactsViewModelFactory(val factsRepository: FactsRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return FactsViewModel(FactsRepository()) as T
+        return FactsViewModel(factsRepository) as T
     }
 }
