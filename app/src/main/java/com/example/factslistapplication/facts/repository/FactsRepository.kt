@@ -24,18 +24,4 @@ class FactsRepository(val service: APIService) {
             Result.Error(IOException("Something went wrong."))
         }, "Something went wrong.")
     }
-
-   /* suspend fun fetchFacts(): Result<FactsResponse> = withContext(Dispatchers.IO) {
-        Log.e("Darshan","=======$service")
-        val response = service.getFacts()
-        if (response.isSuccessful) {
-            val factsResponse = response.body()
-            if (factsResponse != null) {
-                return@withContext Result.Success(factsResponse)
-            }
-        }
-        Result.Error(IOException("Something went wrong."))
-
-    }*/
-
 }
