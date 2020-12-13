@@ -7,7 +7,7 @@ import com.example.factslistapplication.R
 fun ImageView.imageLoading(url: String) {
     Glide.with(this)
         .load(url)
-        .centerCrop()
+        .fitCenter()
         .placeholder(R.drawable.defaultimage)
         .error(R.drawable.defaultimage)
         .into(this)

@@ -9,7 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.factslistapplication.R
 import com.example.factslistapplication.facts.model.Row
 
-class HomeActivity : AppCompatActivity(), OnItemClickListener {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var navGraph: NavGraph
@@ -27,12 +27,6 @@ class HomeActivity : AppCompatActivity(), OnItemClickListener {
         navController = navHostFragment.navController
         navGraph.startDestination = destination
         navController.graph = navGraph
-    }
-
-    override fun onItemClick(row: Row) {
-        val destination = R.id.factsDetailsFragment
-        val bundle = bundleOf(EXTRA_ROW_DATA to row.imageHref)
-        navController.navigate(destination, bundle)
     }
 
     companion object {

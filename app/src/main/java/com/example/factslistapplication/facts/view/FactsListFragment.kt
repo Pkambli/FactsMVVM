@@ -2,9 +2,14 @@ package com.example.factslistapplication.facts.view
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.factslistapplication.FactsApplication
 import com.example.factslistapplication.R
@@ -20,14 +25,19 @@ import kotlinx.android.synthetic.main.fragment_facts.*
 class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickListener {
 
     private lateinit var factsAdapter: FactsItemAdapter
-//    private val factsViewModel: FactsViewModel by viewModels { FactsViewModelFactory(FactsRepository(service)) }
 
     private lateinit var factsViewModel: FactsViewModel
+
+    private lateinit var navController: NavController
+    private lateinit var navGraph: NavGraph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val service = (requireActivity().applicationContext as FactsApplication).service
-        factsViewModel = ViewModelProvider(this, FactsViewModelFactory(FactsRepository(service))).get(FactsViewModel::class.java)
+        factsViewModel =
+            ViewModelProvider(this, FactsViewModelFactory(FactsRepository(service))).get(
+                FactsViewModel::class.java
+            )
         factsAdapter = FactsItemAdapter(this)
     }
 
@@ -40,6 +50,7 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
         swipeToRefreshList.apply {
             isEnabled = true
             setOnRefreshListener {
+                isRefreshing = true
                 factsViewModel.fetchLatestData()
                 isRefreshing = false
             }
@@ -50,11 +61,7 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
                 is UIState.Error -> showError(it.error.exception.message)
                 is UIState.Success -> factsAdapter.setItems(it.data)
                 is UIState.Loading -> {
-                    if (it.isLoading && !swipeToRefreshList.isRefreshing) {
-                        indeterminateBar.visibility = View.VISIBLE
-                    } else {
-                        indeterminateBar.visibility = View.GONE
-                    }
+                    swipeToRefreshList.isRefreshing = it.isLoading
                 }
             }
         })
@@ -62,9 +69,10 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
 
     override fun onItemClick(row: Row) {
         val activity = requireActivity()
-        if (activity is OnItemClickListener) {
-            activity.onItemClick(row)
-        }
+        val navController = Navigation.findNavController(activity, R.id.mainNavigationFragment)
+        val bundle = bundleOf(HomeActivity.EXTRA_ROW_DATA to row.imageHref)
+        navController.navigate(R.id.factsDetailsFragment, bundle)
+
     }
 
 
