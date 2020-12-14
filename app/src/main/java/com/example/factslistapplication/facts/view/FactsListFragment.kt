@@ -52,7 +52,6 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
                 is UIState.Success -> factsAdapter.setItems(it.data)
                 is UIState.Loading -> {
                     swipeToRefreshList.isRefreshing = it.isLoading
-                    //swipeToRefreshList.isRefreshing = it.isLoading
                 }
             }
         })
