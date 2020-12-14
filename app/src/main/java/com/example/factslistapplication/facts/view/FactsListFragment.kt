@@ -3,12 +3,7 @@ package com.example.factslistapplication.facts.view
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isNotEmpty
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.factslistapplication.FactsApplication
@@ -27,9 +22,6 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
     private lateinit var factsAdapter: FactsItemAdapter
 
     private lateinit var factsViewModel: FactsViewModel
-
-    private lateinit var navController: NavController
-    private lateinit var navGraph: NavGraph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +42,7 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
         swipeToRefreshList.apply {
             isEnabled = true
             setOnRefreshListener {
-                isRefreshing = true
                 factsViewModel.fetchLatestData()
-                isRefreshing = false
             }
         }
 
@@ -62,6 +52,7 @@ class FactsListFragment : BaseFragment(R.layout.fragment_facts), OnItemClickList
                 is UIState.Success -> factsAdapter.setItems(it.data)
                 is UIState.Loading -> {
                     swipeToRefreshList.isRefreshing = it.isLoading
+                    //swipeToRefreshList.isRefreshing = it.isLoading
                 }
             }
         })

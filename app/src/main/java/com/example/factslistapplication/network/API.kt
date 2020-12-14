@@ -1,6 +1,5 @@
 package com.example.factslistapplication.network
 
-import com.example.factslistapplication.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,9 +7,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object API {
-
-    var BASE_URL = BuildConfig.BASE_URL
-//    var BASE_URL = "http://localhost:8080/"
 
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

@@ -2,12 +2,10 @@ package com.example.factslistapplication.facts.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import com.example.factslistapplication.R
-import com.example.factslistapplication.facts.model.Row
 
 class HomeActivity : AppCompatActivity() {
 

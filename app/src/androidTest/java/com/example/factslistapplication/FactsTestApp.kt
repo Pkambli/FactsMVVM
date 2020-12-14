@@ -34,7 +34,6 @@
 
 package com.example.factslistapplication
 
-import android.app.Application
 import android.os.StrictMode
 import com.example.factslistapplication.network.API
 

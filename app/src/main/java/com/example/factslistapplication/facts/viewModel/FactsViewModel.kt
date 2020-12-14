@@ -14,7 +14,7 @@ class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel()
     val factsState: LiveData<UIState<List<Row>>>
         get() = _factsState
 
-    var isAPICalling = false
+    private var isAPICalling = false
 
     init {
         fetchLatestData()
@@ -31,8 +31,7 @@ class FactsViewModel(private val factsRepository: FactsRepository) : ViewModel()
         isAPICalling = true
         emitState(UIState.Loading(true))
         viewModelScope.launch {
-            val result = factsRepository.fetchFacts()
-            when (result) {
+            when (val result = factsRepository.fetchFacts()) {
                 is Result.Success -> {
                     isAPICalling = false
                     emitState(UIState.Loading(false))

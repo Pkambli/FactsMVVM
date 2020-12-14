@@ -13,7 +13,6 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -58,7 +57,7 @@ class FactsListFragmentTest {
     }
 
 
-    fun getOkHttpClient(): OkHttpClient {
+    private fun getOkHttpClient(): OkHttpClient {
         return if (okHttpClient == null) {
             val okHttpClient = OkHttpClient.Builder()
                 .readTimeout(15, TimeUnit.SECONDS)
@@ -95,7 +94,7 @@ class FactsListFragmentTest {
                 matches(
                     CustomMatcher.atPosition(
                         0,
-                        hasDescendant(ViewMatchers.withText("Beavers"))
+                        hasDescendant(withText("Beavers"))
                     )
                 )
             )
@@ -106,7 +105,7 @@ class FactsListFragmentTest {
                 matches(
                     CustomMatcher.atPosition(
                         8,
-                        hasDescendant(ViewMatchers.withText("Meese"))
+                        hasDescendant(withText("Meese"))
                     )
                 )
             )
@@ -252,10 +251,10 @@ class FactsListFragmentTest {
 
         Thread.sleep(3000)
 
-        onView(withId(R.id.imageViewDetails)).check(matches(withDrawable(R.drawable.defaultimage)))
+        onView(withId(R.id.imageViewDetails)).check(matches(withDrawable()))
     }
 
-    class DrawableMatcher(resourceId: Int) : TypeSafeMatcher<View?>() {
+    class DrawableMatcher : TypeSafeMatcher<View?>() {
         override fun matchesSafely(item: View?): Boolean {
             return false
         }
@@ -263,15 +262,15 @@ class FactsListFragmentTest {
         override fun describeTo(description: Description) {}
     }
 
-    private fun withDrawable(resourceId: Int): Matcher<View?> {
-        return DrawableMatcher(resourceId)
+    private fun withDrawable(): Matcher<View?> {
+        return DrawableMatcher()
     }
 
     fun noDrawable(): Matcher<View?> {
-        return DrawableMatcher(-1)
+        return DrawableMatcher()
     }
 
-    private fun withCustomConstraints(action: ViewAction, constraints: Matcher<View>): ViewAction? {
+    private fun withCustomConstraints(action: ViewAction, constraints: Matcher<View>): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
                 return constraints
